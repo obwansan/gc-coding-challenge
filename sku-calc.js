@@ -6,6 +6,9 @@
  * Assert.That(100, Is.EqualTo(price_of(“AA”)))
  * Assert.That(130, Is.EqualTo(price_of(“AAA”)))
  * Assert.That(175, Is.EqualTo(price_of(“AAABB”)))
+ *
+ * Have a try/catch that throws an error if the argument passed to price_of
+ * isn't a string. (in the if/else block? Or a switch?)
  */
 
 function price_of(skus) {
@@ -13,8 +16,10 @@ function price_of(skus) {
     var priceSkuA = 0;
     var priceSkuB = 0;
     var priceSku = 0;
-    var multiSkuA = 0;
-    var multiSkuB = 0;
+    var multiSkuAs = 0;
+    var multiSkuAsDiscount = 0;
+    var multiSkuBs = 0;
+    var multiSkuBsDiscount = 0;
 
     // Split sku string into an array
     var skusArr = skus.split('');
@@ -34,15 +39,38 @@ function price_of(skus) {
     });
     // console.log(priceSkuB, priceSkuA);
 
-    // For A and B, divide price by 150 and 60 respectively.
+    // if there's at least one SKU A discount triple
     if (priceSkuA >= 150) {
-
+      // get the number of discount triples
+      multiSkuAs = Math.floor(priceSkuA / 150);
+      // get the discount amount
+      multiSkuAsDiscount = multiSkuAs * 20;
+      // subtract it from the total price for this SKU
+      priceSkuA -= multiSkuAsDiscount;
     }
 
-    // For every multiple (e.g. 60 in priceSkuB) subtract 15 from total.
+    // if there's at least one SKU B discount double
+    if (priceSkuB >= 60) {
+      // get the number of discount triples
+      multiSkuBs = Math.floor(priceSkuB / 60);
+      // get the discount amount
+      multiSkuBsDiscount = multiSkuBs * 15;
+      // subtract it from the total price for this SKU
+      priceSkuB -= multiSkuBsDiscount;
+    }
+    // console.log(priceSkuB);
+
+    // sum all the SKU prices and return
+    return priceSkuA + priceSkuB + priceSku;
 
 }
 
-// console.log(
-  price_of('AA');
-// );
+console.log(
+  // price_of('')
+  // price_of('A')
+  // price_of('AB')
+  // price_of('CDBA')
+  // price_of('AA')
+  // price_of('AAA')
+  price_of('AAABB')
+);
