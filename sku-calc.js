@@ -17,66 +17,60 @@
 
 function price_of(skus) {
 
-  var priceSkuA = 0;
-  var priceSkuB = 0;
-  var priceSku = 0;
-  var numOfMultiSkuAs = 0;
-  var numOfmultiSkuBs = 0;
-  var multiSkuAsDiscount = 0;
-  var multiSkuBsDiscount = 0;
+  var pricePerSkuA = 50;
+  var pricePerSkuB = 30;
+  var pricePerSkuC = 20;
+  var pricePerSkuD = 15;
+  var multiBuyNumSkuA = 3;
+  var multiBuyNumSkuB = 2;
+  var multiBuyDiscountSkuA = 20;
+  var multiBuyDiscountSkuB = 15;
+  var totalPriceSkuA = 0;
+  var totalPriceSkuB = 0;
+  var totalPriceSku = 0;
 
-  // Check if only valid SKU codes have been entered
   var invalidSkuCodes = new RegExp('[^A-D]');
   if (invalidSkuCodes.test(skus)) {
     return 'Please only enter valid SKU codes: A-D';
   }
 
-  // Split SKU string into an array
   var skusArray = skus.split('');
-
-  // Loop over array of SKUs and increment price variables
   skusArray.forEach(function(sku) {
     switch(sku) {
       case 'A':
-        priceSkuA += 50;
+        totalPriceSkuA += pricePerSkuA;
         break;
       case 'B':
-        priceSkuB += 30;
+        totalPriceSkuB += pricePerSkuB;
         break;
       case 'C':
-        priceSku += 20;
+        totalPriceSku += pricePerSkuC;
         break;
       case 'D':
-        priceSku += 15;
+        totalPriceSku += pricePerSkuD;
         break;
       default:
-        priceSku += 0;
+        totalPriceSku += 0;
     }
   });
 
-  // If there's at least one SKU-A discount triple
-  if (priceSkuA >= 150) {
-    // work out number of discount triples
-    numOfMultiSkuAs = Math.floor(priceSkuA / 150);
-    // work out discount amount
-    multiSkuAsDiscount = numOfMultiSkuAs * 20;
-    // subtract it from total price for this SKU
-    priceSkuA -= multiSkuAsDiscount;
-  }
+  totalDiscountPriceSkuA = calcMultiBuyDiscountPrice(pricePerSkuA, totalPriceSkuA, multiBuyNumSkuA, multiBuyDiscountSkuA);
+  totalDiscountPriceSkuB = calcMultiBuyDiscountPrice(pricePerSkuB, totalPriceSkuB, multiBuyNumSkuB, multiBuyDiscountSkuB);
 
-  // if there's at least one SKU-B discount double
-  if (priceSkuB >= 60) {
-    // work out number of discount doubles
-    numOfmultiSkuBs = Math.floor(priceSkuB / 60);
-    // work out discount amount
-    multiSkuBsDiscount = numOfmultiSkuBs * 15;
-    // subtract it from total price for this SKU
-    priceSkuB -= multiSkuBsDiscount;
-  }
+  return totalDiscountPriceSkuA + totalDiscountPriceSkuB + totalPriceSku;
+}
 
-  // sum all the SKU prices and return
-  var totalPrice = priceSkuA + priceSkuB + priceSku;
-  return totalPrice;
+function calcMultiBuyDiscountPrice(pricePerSku, totalPriceSku, multiBuyNum, multiBuyDiscount) {
+    var numOfMultiBuys = 0;
+    var multiSkusDiscount = 0;
+
+    if (totalPriceSku >= pricePerSku * multiBuyNum) {
+        numOfMultiBuys = Math.floor(totalPriceSku / (multiBuyNum * pricePerSku));
+        multiSkusDiscount = numOfMultiBuys * multiBuyDiscount;
+        return totalPriceSku -= multiSkusDiscount;
+    } else {
+        return totalPriceSku;
+    }
 }
 
 console.log(
